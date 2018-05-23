@@ -8,8 +8,9 @@ var DiagonalMovement = require('./DiagonalMovement');
  * @param {number} height Number of rows of the grid.
  * @param {Array<Array<(number|boolean)>>} [matrix] - A 0-1 matrix
  *     representing the walkable status of the nodes(0 or false for walkable).
- *     If the matrix is not supplied, all the nodes will be walkable.  */
-function Grid(width_or_matrix, height, matrix) {
+ *     If the matrix is not supplied, all the nodes will be walkable.
+ * @param {Array<Array<number>>} [costs] - A matrix of all the node costs.  */
+function Grid(width_or_matrix, height, matrix, costs) {
     var width;
 
     if (typeof width_or_matrix !== 'object') {
@@ -30,11 +31,15 @@ function Grid(width_or_matrix, height, matrix) {
      * @type number
      */
     this.height = height;
-
+    /**
+     * A matrix of all the node costs.
+     * @type {Array<Array<number>>}
+     */
+    this.costs = costs;
     /**
      * A 2D array of nodes.
      */
-    this.nodes = this._buildNodes(width, height, matrix);
+    this.nodes = this._buildNodes(width, height, matrix, costs);
 }
 
 /**
@@ -44,9 +49,10 @@ function Grid(width_or_matrix, height, matrix) {
  * @param {number} height
  * @param {Array<Array<number|boolean>>} [matrix] - A 0-1 matrix representing
  *     the walkable status of the nodes.
+ * @param {Array<Array<number>>} [costs] - A matrix of all the node costs.
  * @see Grid
  */
-Grid.prototype._buildNodes = function(width, height, matrix) {
+Grid.prototype._buildNodes = function(width, height, matrix, costs) {
     var i, j,
         nodes = new Array(height);
 
@@ -72,6 +78,8 @@ Grid.prototype._buildNodes = function(width, height, matrix) {
                 // 0, false, null will be walkable
                 // while others will be un-walkable
                 nodes[i][j].walkable = false;
+            }else if (costs !== undefined && costs.length > i && costs[i].length > j && costs[i][j] !== undefined) {
+                nodes[i][j].cost = costs[i][j];
             }
         }
     }
@@ -110,6 +118,15 @@ Grid.prototype.isInside = function(x, y) {
     return (x >= 0 && x < this.width) && (y >= 0 && y < this.height);
 };
 
+/**
+ * Get the cost to walk the node at the given position.
+ * @param x - The x coordinate of the node.
+ * @param y - The y coordinate of the node.
+ * @return {number} - The cost to walk over this node.
+ */
+Grid.prototype.getCostAt = function(x, y) {
+    return this.isInside(x, y) ? this.nodes[y][x].cost : 0;
+};
 
 /**
  * Set whether the node on the given position is walkable.
@@ -122,6 +139,15 @@ Grid.prototype.setWalkableAt = function(x, y, walkable) {
     this.nodes[y][x].walkable = walkable;
 };
 
+/**
+ * Set the cost to walk the node at the given position.
+ * @param {number} x - The x coordinate of the node.
+ * @param {number} y - The y coordinate of the node.
+ * @param {number} cost - The cost to walk over this node.
+ */
+Grid.prototype.setCostAt = function(x, y, cost) {
+    this.nodes[y][x].cost = cost;
+};
 
 /**
  * Get the neighbors of the given node.
@@ -233,7 +259,7 @@ Grid.prototype.clone = function() {
     for (i = 0; i < height; ++i) {
         newNodes[i] = new Array(width);
         for (j = 0; j < width; ++j) {
-            newNodes[i][j] = new Node(j, i, thisNodes[i][j].walkable);
+            newNodes[i][j] = new Node(j, i, thisNodes[i][j].walkable, thisNodes[i][j].cost);
         }
     }
 

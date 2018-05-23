@@ -29,6 +29,14 @@ describe('Grid', function() {
                 }
             }
         });
+
+        it('should set all nodes\' cost to 0', function() {
+            for (var i = 0; i < height; ++i) {
+                for (var j = 0; j < width; ++j) {
+                    grid.getCostAt(j, i).should.equal(0);
+                }
+            }
+        });
     });
 
     describe('generate with matrix', function() {
@@ -85,13 +93,40 @@ describe('Grid', function() {
             });
             enumPos(function(x, y) {
                 grid.isWalkableAt(x, y).should.be.false;
-            })
+            });
             enumPos(function(x, y) {
                 grid.setWalkableAt(x, y, true); 
             });
             enumPos(function(x, y) {
                 grid.isWalkableAt(x, y).should.be.true;
-            })
+            });
+        });
+
+        it('should initiate all nodes\' cost attribute', function() {
+            enumPos(function(x, y, g) {
+                g.getCostAt(x, y).should.equal(0);
+            });
+        });
+
+        it('should be able to set nodes\' cost attribute', function() {
+            enumPos(function(x, y) {
+                grid.setCostAt(x, y, 2);
+            });
+            enumPos(function(x, y) {
+                grid.getCostAt(x, y).should.equal(2);
+            });
+            enumPos(function(x, y) {
+                grid.setCostAt(x, y, 1);
+            });
+            enumPos(function(x, y) {
+                grid.getCostAt(x, y).should.equal(1);
+            });
+            enumPos(function(x, y) {
+                grid.setCostAt(x, y, 0);
+            });
+            enumPos(function(x, y) {
+                grid.getCostAt(x, y).should.equal(0);
+            });
         });
 
         it('should return correct answer for position validity query', function() {
