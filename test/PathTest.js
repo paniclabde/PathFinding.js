@@ -70,18 +70,18 @@ pathTests({
     name: 'BiBreadthFirst',
     finder: new PF.BiBreadthFirstFinder(),
     optimal: true
+}, {
+    name: 'Dijkstra',
+    finder: new PF.DijkstraFinder(),
+    optimal: true
+}, {
+    name: 'BiDijkstra',
+    finder: new PF.BiDijkstraFinder(),
+    optimal: true
 });
 
 // finders NOT guaranteed to find the shortest path
 pathTests({
-    name: 'Dijkstra',
-    finder: new PF.DijkstraFinder(),
-    optimal: false
-}, {
-    name: 'BiDijkstra',
-    finder: new PF.BiDijkstraFinder(),
-    optimal: false
-}, {
     name: 'BiAStar',
     finder: new PF.BiAStarFinder(),
     optimal: false
