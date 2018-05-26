@@ -15,7 +15,7 @@ module.exports = {
     'BiDijkstraFinder'          : require('./finders/BiDijkstraFinder'),
     'IDAStarFinder'             : require('./finders/IDAStarFinder'),
     'JumpPointFinder'           : require('./finders/JumpPointFinder'),
-    'ChainRanger'               : require('./rangers/ChainRanger'),
+//    'ChainRanger'               : require('./rangers/ChainRanger'),
     'ExactRanger'               : require('./rangers/ExactRanger'),
     'LimitRanger'               : require('./rangers/LimitRanger'),
     'MultiExactRanger'          : require('./rangers/MultiExactRanger')
